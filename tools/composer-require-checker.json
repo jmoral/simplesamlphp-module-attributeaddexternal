@@ -1,0 +1,6 @@
+{
+  "symbol-whitelist": [
+    "SimpleSAML\\Configuration",
+    "SimpleSAML\\Session"
+  ]
+}
