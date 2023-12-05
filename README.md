@@ -28,6 +28,23 @@ in `config.php`, search for the `module.enable` key and set `attributeaddexterna
 See the [SimpleSAMLphp Composer module installer](https://github.com/simplesamlphp/composer-module-installer)
 documentation for more information about creating modules installable through Composer.
 
+### Adding external attributes
+
+Then you need to set filter parameters in your config.php file.
+
+Example, add an external attribute 'test' from an external website:
+url is the url of the external website
+jsonpath is where the information is in the response json
+```
+    70 => [
+        'test' => [
+            'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_seed=1&_locale=es_ES',
+            'jsonpath' => 'data.0.username',
+        ]
+    ];
+
+```
+
 ## Relevant files
 
 This module consists of the following files:
