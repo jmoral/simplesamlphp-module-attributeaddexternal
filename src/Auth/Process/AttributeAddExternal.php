@@ -20,7 +20,7 @@ use function var_export;
  * Filter to add attributes.
  *
  * This filter allows you to add attributes to the attribute set being processed.
- *
+ * @psalm-api
  * @package SimpleSAMLphp
  */
 class AttributeAddExternal extends Auth\ProcessingFilter
