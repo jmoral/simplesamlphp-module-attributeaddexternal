@@ -90,7 +90,6 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             default:
                 $msg = 'Unknown origin param: ' . var_export($name, true);
                 throw new AssertionFailedException($msg);
-                break;
         }
     }
 

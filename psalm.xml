@@ -4,6 +4,8 @@
     useDocblockTypes="true"
     errorLevel="2"
     reportMixedIssues="false"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="true"
 >
     <projectFiles>
         <directory name="src" />
