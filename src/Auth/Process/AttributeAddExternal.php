@@ -9,6 +9,7 @@ use SimpleSAML\Auth;
 use SimpleSAML\Error;
 use SimpleSAML\Assert\AssertionFailedException;
 use SimpleSAML\Utils\HTTP;
+
 use function array_key_exists;
 use function array_merge;
 use function is_array;
@@ -37,7 +38,8 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * @param origin external origin for an attribute
      * @return string whit url of origin
      */
-    private function parseOrigin(array $origin): string {
+    private function parseOrigin(array $origin): string
+    {
         $url = "";
         foreach ($origin as $name => $value) {
             switch ($name) {
@@ -128,9 +130,10 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     /**
      * Obtain an unidimensional array with all data, indexed by path.
      */
-    private function flatten(array $array, string $prefix = ''): array {
+    private function flatten(array $array, string $prefix = ''): array
+    {
         $result = array();
-        foreach($array as $key=>$value) {
+        foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $result = $result + $this->flatten($value, $prefix . $key . '.');
             } else {

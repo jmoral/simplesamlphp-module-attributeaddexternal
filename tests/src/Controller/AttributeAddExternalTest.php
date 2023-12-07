@@ -253,5 +253,4 @@ class AttributeAddExternalTest extends TestCase
         self::processFilter($config, $initialState);
         self::fail();
     }
-
 }
