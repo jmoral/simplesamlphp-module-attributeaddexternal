@@ -7,6 +7,12 @@
             "SimpleSAML\\Module\\attributeaddexternal\\": "src/"
         }
     },
+    "authors": [
+        {
+            "name": "Juan Moral",
+            "email": "jmoral@ujaen.es"
+        }
+    ],    
     "autoload-dev": {
         "psr-4": {
             "SimpleSAML\\Test\\Utils\\": "vendor/simplesamlphp/simplesamlphp/tests/Utils"
@@ -15,6 +21,7 @@
     "require": {
         "php": "^8.1",
 
+        "simplesamlphp/assert": "^1.0",
         "simplesamlphp/simplesamlphp": "^2.1",
         "symfony/http-foundation": "^6.4"
     },
