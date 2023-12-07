@@ -35,6 +35,7 @@ Then you need to set filter parameters in your config.php file.
 Example, add an external attribute 'test' from an external website:
 url is the url of the external website
 jsonpath is where the information is in the response json
+
 ```
     70 => [
         'test' => [
@@ -44,6 +45,21 @@ jsonpath is where the information is in the response json
     ];
 
 ```
+
+To send a parameter from user attributes
+
+```
+    70 = [
+        'test' => [
+            'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_locale=es_ES',
+            'jsonpath' => 'data.0.username',
+            'parameters' => [
+                '_seed' => 'userSeed'
+            ]
+        ]
+    ];
+```
+where userSeed is the name of the user's attribute
 
 ## Relevant files
 

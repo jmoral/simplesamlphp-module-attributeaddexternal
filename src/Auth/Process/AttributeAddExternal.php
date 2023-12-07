@@ -104,7 +104,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             if (array_key_exists($template, $attributes)) {
                 $parameters[$name] = $attributes[$template];
             } else {
-                $msg ='AttributeAddExternal: parameter not found in attributes ' . var_export($template, true);
+                $msg = 'AttributeAddExternal: parameter not found in attributes ' . var_export($template, true);
                 throw new Error\Exception($msg);
             }
         }
@@ -153,7 +153,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         try {
             $response = $http->fetch($url);
         } catch (Error\Exception $ex) {
-            $msg ='AttributeAddExternal: failed to fetch ' . var_export($url, true);
+            $msg = 'AttributeAddExternal: failed to fetch ' . var_export($url, true);
             throw new Error\Exception($msg);
         }
         settype($response, "string");

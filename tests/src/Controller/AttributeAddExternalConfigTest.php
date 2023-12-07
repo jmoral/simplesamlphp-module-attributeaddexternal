@@ -109,5 +109,4 @@ class AttributeAddExternalConfigTest extends TestCase
         self::processFilter($config, []);
         self::fail();
     }
-
 }
