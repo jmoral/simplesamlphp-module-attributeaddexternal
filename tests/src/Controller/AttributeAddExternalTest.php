@@ -191,8 +191,59 @@ class AttributeAddExternalTest extends TestCase
             'Attributes' => [],
         ];
         $this->expectException(Error\Exception::class);
-        $this->expectExceptionMessage("AttributeAddExternal: failed to decode response from 'https://www.google.es'");
+        $msg = "AttributeAddExternal: failed to decode response from 'https://www.google.es'";
+        $this->expectExceptionMessage($msg);
         self::processFilter($config, $initialState);
         self::fail();
+    }
+
+    /**
+     * Test obtain a new external attribute with parameters.
+     */
+    public function testExternalAttributeParameter(): void
+    {
+        $config = [
+            'test' => [
+                'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_locale=es_ES',
+                'jsonpath' => 'data.0.username',
+                'parameters' => [
+                    '_seed' => 'userSeed'
+                ]
+            ]
+        ];
+        $initialState = [
+            'Attributes' => [
+                'userSeed' => '1'
+            ],
+        ];
+        $result = self::processFilter($config, $initialState);
+        self::assertNotEquals($initialState, $result);
+        self::assertArrayHasKey("test", $result['Attributes']);
+        self::assertEquals("zpineiro", $result['Attributes']['test']);
+    }
+
+    /**
+     * Test obtain a new external attribute with parameters not un attributes.
+     */
+    public function testParameterNotInAttrubites(): void
+    {
+        $config = [
+            'test' => [
+                'url' => $this->url,
+                'jsonpath' => 'data.0.username',
+                'parameters' => [
+                    '_seed' => 'userSeed'
+                ]
+            ]
+        ];
+        $initialState = [
+            'Attributes' => [
+                'user' => '1'
+            ],
+        ];
+        $this->expectException(Error\Exception::class);
+        $msg = "AttributeAddExternal: parameter not found in attributes 'userSeed'";
+        $this->expectExceptionMessage($msg);
+        self::processFilter($config, $initialState);
     }
 }

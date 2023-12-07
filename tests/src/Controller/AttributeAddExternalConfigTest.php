@@ -59,7 +59,7 @@ class AttributeAddExternalConfigTest extends TestCase
             ]
         ];
         $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage("Unknown flag in origin: 'test'");
+        $this->expectExceptionMessage("Unknown origin param: 'test'");
         self::processFilter($config, []);
         self::fail();
     }
@@ -93,4 +93,21 @@ class AttributeAddExternalConfigTest extends TestCase
         self::processFilter($config, []);
         self::fail();
     }
+
+    /**
+     * Test invalid parameters.
+     */
+    public function testConfigInvalidParameters(): void
+    {
+        $config = [
+            'test' => [
+                'parameters' => 'x'
+            ]
+        ];
+        $this->expectException(AssertionFailedException::class);
+        $this->expectExceptionMessage("parameters should be an associative array");
+        self::processFilter($config, []);
+        self::fail();
+    }
+
 }

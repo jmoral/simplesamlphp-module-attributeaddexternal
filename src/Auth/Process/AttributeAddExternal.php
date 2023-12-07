@@ -34,35 +34,6 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     private array $attributesToAdd = [];
 
     /**
-     * Parse external origin for an attribute
-     * @param array origin external origin for an attribute
-     * @return string whit url of origin
-     */
-    private function parseOrigin(array $origin): string
-    {
-        $url = "";
-        foreach ($origin as $name => $value) {
-            switch ($name) {
-                case 'url':
-                    Assert::stringNotEmpty($value);
-                    Assert::validURL($value);
-                    $url = $value;
-                    break;
-                case 'replace':
-                    Assert::boolean($value, 'replace should be boolean');
-                    break;
-                case 'jsonpath':
-                    Assert::stringNotEmpty($value);
-                    break;
-                default:
-                    throw new AssertionFailedException('Unknown flag in origin: ' . var_export($name, true));
-                    break;
-            }
-        }
-        return $url;
-    }
-
-    /**
      * Initialize this filter.
      *
      * @param array &$config  Configuration information about this filter.
@@ -75,11 +46,69 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         Assert::isArray($config, "config should be an array");
         foreach ($config as $attr => $origin) {
             if (!is_array($origin)) {
-                throw new AssertionFailedException('external origin should be an array');
+                $msg = 'external origin should be an array';
+                throw new AssertionFailedException($msg);
             }
             $this->parseOrigin($origin);
             $this->attributesToAdd[$attr] = $origin;
         }
+    }
+
+    /**
+     * Parse external origin for an attribute
+     * @param array $origin external origin for an attribute
+     */
+    private function parseOrigin(array $origin): void
+    {
+        foreach ($origin as $name => $value) {
+            $this->parseOriginParam($name, $value);
+        }
+    }
+
+    /**
+     * Parse external origin parameter.
+     * @param string name of origin parameter
+     * @param mixed value of origin parameter
+     */
+    private function parseOriginParam(string $name, mixed $value): void
+    {
+        switch ($name) {
+            case 'url':
+                Assert::stringNotEmpty($value);
+                Assert::validURL($value);
+                break;
+            case 'replace':
+                Assert::boolean($value, 'replace should be boolean');
+                break;
+            case 'jsonpath':
+                Assert::stringNotEmpty($value);
+                break;
+            case 'parameters':
+                $msg = 'parameters should be an associative array';
+                Assert::nullOrIsArray($value, $msg);
+                break;
+            default:
+                $msg = 'Unknown origin param: ' . var_export($name, true);
+                throw new AssertionFailedException($msg);
+                break;
+        }
+    }
+
+    /**
+     * get an associative array with parameteres name and value from attributes.
+     */
+    private function getParameters(array $parameteresTemplate, array $attributes): array
+    {
+        $parameters = [];
+        foreach ($parameteresTemplate as $name => $template) {
+            if (array_key_exists($template, $attributes)) {
+                $parameters[$name] = $attributes[$template];
+            } else {
+                $msg ='AttributeAddExternal: parameter not found in attributes ' . var_export($template, true);
+                throw new Error\Exception($msg);
+            }
+        }
+        return $parameters;
     }
 
     /**
@@ -94,8 +123,13 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         Assert::keyExists($state, 'Attributes');
         $attributes = &$state['Attributes'];
         foreach ($this->attributesToAdd as $name => $origin) {
-            $url = $this->parseOrigin($origin);
+            $url = $origin["url"];
             $path = $origin["jsonpath"];
+            if (array_key_exists("parameters", $origin)) {
+                $http = new HTTP();
+                $parameters = $this->getParameters($origin['parameters'], $attributes);
+                $url = $http->addURLParameters($url, $parameters);
+            }
             $response = $this->fetchInformation($url, $path);
             $replace = !empty($origin["replace"]);
             if ($replace === true || !array_key_exists($name, $attributes)) {
@@ -119,16 +153,19 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         try {
             $response = $http->fetch($url);
         } catch (Error\Exception $ex) {
-            throw new Error\Exception('AttributeAddExternal: failed to fetch ' . var_export($url, true));
+            $msg ='AttributeAddExternal: failed to fetch ' . var_export($url, true);
+            throw new Error\Exception($msg);
         }
         settype($response, "string");
         $responseArray = json_decode($response, true);
         if (is_null($responseArray)) {
-            throw new Error\Exception('AttributeAddExternal: failed to decode response from ' . var_export($url, true));
+            $msg = 'AttributeAddExternal: failed to decode response from ' . var_export($url, true);
+            throw new Error\Exception($msg);
         }
         $flattened = $this->flatten($responseArray);
         if (!array_key_exists($jsonPath, $flattened)) {
-            throw new Error\Exception('AttributeAddExternal: invalid path ' . var_export($jsonPath, true));
+            $msg = 'AttributeAddExternal: invalid path ' . var_export($jsonPath, true);
+            throw new Error\Exception($msg);
         }
         return $flattened[$jsonPath];
     }
