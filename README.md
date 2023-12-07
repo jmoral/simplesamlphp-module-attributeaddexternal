@@ -1,10 +1,9 @@
 # SimpleSAMLphp Composer module attributeaddexternal
 
-![Build Status](https://github.com/simplesamlphp/simplesamlphp-module-attributeaddexternal/workflows/CI/badge.svg?branch=master)
-[![Coverage Status](https://codecov.io/gh/simplesamlphp/simplesamlphp-module-attributeaddexternal/branch/master/graph/badge.svg)](https://codecov.io/gh/simplesamlphp/simplesamlphp-module-attributeaddexternal)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/simplesamlphp/simplesamlphp-module-attributeaddexternal/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/simplesamlphp/simplesamlphp-module-attributeaddexternal/?branch=master)
-[![Type Coverage](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal/coverage.svg)](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal)
-[![Psalm Level](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal/level.svg)](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal)
+![Build Status](https://github.com/jmoral/simplesamlphp-module-attributeaddexternal/actions/workflows/php.yml/badge.svg?branch=master)
+[![Coverage Status](https://codecov.io/gh/jmoral/simplesamlphp-module-attributeaddexternal/branch/master/graph/badge.svg)](https://codecov.io/gh/jmoral/simplesamlphp-module-attributeaddexternal)
+[![Type Coverage](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal/coverage.svg)](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal)
+[![Psalm Level](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal/level.svg)](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal)
 
 This module allows you to obtain an attribute from an external URL which returns a json
 ## Install
