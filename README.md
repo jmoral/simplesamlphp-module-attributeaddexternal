@@ -6,6 +6,7 @@
 [![Type Coverage](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal/coverage.svg)](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal)
 [![Psalm Level](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal/level.svg)](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-attributeaddexternal)
 
+This module allows you to obtain an attribute from an external URL which returns a json
 ## Install
 
 This package is a SimpleSAMLphp module installable through

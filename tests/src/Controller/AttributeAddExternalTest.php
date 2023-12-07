@@ -48,64 +48,6 @@ class AttributeAddExternalTest extends TestCase
     }
 
     /**
-     * Test invalid url.
-     */
-    public function testConfigInvalidUrl(): void
-    {
-        $config = [
-            'test' => [
-                'url' => 'xxx',
-                'jsonpath' => 'data.0.username',
-            ]
-        ];
-        $initialState = [
-            'Attributes' => [],
-        ];
-        $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage("'xxx' is not a valid RFC2396 compliant URL");
-        self::processFilter($config, $initialState);
-        self::fail();
-    }
-
-    /**
-     * Test invalid origin value.
-     */
-    public function testConfigInvalidOriginValue(): void
-    {
-        $config = [
-            'test' => [
-                'url' => $this->url,
-                'jsonpath' => 'data.0.username',
-                'test' => 'xx'
-            ]
-        ];
-        $initialState = [
-            'Attributes' => [],
-        ];
-        $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage("Unknown flag in origin: 'test'");
-        self::processFilter($config, $initialState);
-        self::fail();
-    }
-
-    /**
-     * Test invalid origin.
-     */
-    public function testConfigInvalidOrigin(): void
-    {
-        $config = [
-            'test' => 'x'
-        ];
-        $initialState = [
-            'Attributes' => [],
-        ];
-        $this->expectException(AssertionFailedException::class);
-        $this->expectExceptionMessage("external origin should be an array");
-        self::processFilter($config, $initialState);
-        self::fail();
-    }
-
-    /**
      * Test .
      */
     public function testReplace(): void

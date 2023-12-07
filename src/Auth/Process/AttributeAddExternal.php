@@ -35,7 +35,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
 
     /**
      * Parse external origin for an attribute
-     * @param origin external origin for an attribute
+     * @param array origin external origin for an attribute
      * @return string whit url of origin
      */
     private function parseOrigin(array $origin): string
@@ -49,7 +49,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
                     $url = $value;
                     break;
                 case 'replace':
-                    Assert::boolean($value);
+                    Assert::boolean($value, 'replace should be boolean');
                     break;
                 case 'jsonpath':
                     Assert::stringNotEmpty($value);
@@ -106,6 +106,12 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
     }
 
+    /**
+     * Fetch information from an external URL and return data in jsonPath.
+     * @param string url url to obtain information from
+     * @param string jsonPath reponse path to obtain data from
+     * @return string in jsonPath from response
+     */
     public function fetchInformation(string $url, string $jsonPath): string
     {
         $http = new HTTP();
