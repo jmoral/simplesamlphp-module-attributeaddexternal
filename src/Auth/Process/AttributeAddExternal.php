@@ -132,7 +132,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      */
     private function flatten(array $array, string $prefix = ''): array
     {
-        $result = array();
+        $result = [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $result = $result + $this->flatten($value, $prefix . $key . '.');
