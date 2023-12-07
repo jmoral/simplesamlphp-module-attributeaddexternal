@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SimpleSAML\Test\attributeaddexternal\Auth\Process;
 
 use PHPUnit\Framework\TestCase;
-use SimpleSAML\Assert\AssertionFailedException;
 use SimpleSAML\Error;
 use SimpleSAML\Module\attributeaddexternal\Auth\Process\AttributeAddExternal;
 
@@ -153,7 +152,6 @@ class AttributeAddExternalTest extends TestCase
         $this->expectException(Error\Exception::class);
         $this->expectExceptionMessage("AttributeAddExternal: failed to fetch '$this->wrongUrl'");
         self::processFilter($config, $initialState);
-        self::fail();
     }
 
     /**
@@ -194,7 +192,6 @@ class AttributeAddExternalTest extends TestCase
         $msg = "AttributeAddExternal: failed to decode response from 'https://www.google.es'";
         $this->expectExceptionMessage($msg);
         self::processFilter($config, $initialState);
-        self::fail();
     }
 
     /**

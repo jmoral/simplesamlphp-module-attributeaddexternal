@@ -29,7 +29,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * Attributes which should be added/appended.
      *
      * Associative array of arrays.
-     * @var array
+     * @var array<string, mixed>
      */
     private array $attributesToAdd = [];
 
@@ -56,7 +56,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
 
     /**
      * Parse external origin for an attribute
-     * @param array $origin external origin for an attribute
+     * @param array<string, mixed> $origin external origin for an attribute
      */
     private function parseOrigin(array $origin): void
     {
@@ -95,11 +95,14 @@ class AttributeAddExternal extends Auth\ProcessingFilter
 
     /**
      * get an associative array with parameteres name and value from attributes.
+     * @param array<string, string> $parametersTemplate parameter pointing to atribute
+     * @param array $attributes attributes from user
+     * @return array associative array with paramaters an actual values
      */
-    private function getParameters(array $parameteresTemplate, array $attributes): array
+    private function getParameters(array $parametersTemplate, array $attributes): array
     {
         $parameters = [];
-        foreach ($parameteresTemplate as $name => $template) {
+        foreach ($parametersTemplate as $name => $template) {
             if (array_key_exists($template, $attributes)) {
                 $parameters[$name] = $attributes[$template];
             } else {
@@ -143,6 +146,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * Fetch information from an external URL and return data in jsonPath.
      * @param string url url to obtain information from
      * @param string jsonPath reponse path to obtain data from
+     * @throws Error\Exception If the information from url or jsonPath cannot be retrieved.
      * @return string in jsonPath from response
      */
     public function fetchInformation(string $url, string $jsonPath): string
@@ -151,7 +155,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         // no getHeaderss
         try {
             $response = $http->fetch($url);
-        } catch (Error\Exception $ex) {
+        } catch (Error\Exception | \InvalidArgumentException $ex) {
             $msg = 'AttributeAddExternal: failed to fetch ' . var_export($url, true);
             throw new Error\Exception($msg);
         }
@@ -171,6 +175,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
 
     /**
      * Obtain an unidimensional array with all data, indexed by path.
+     * @param array<string, string|array> $array
      */
     private function flatten(array $array, string $prefix = ''): array
     {

@@ -43,7 +43,6 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("'xxx' is not a valid RFC2396 compliant URL");
         self::processFilter($config, []);
-        self::fail();
     }
 
     /**
@@ -61,7 +60,6 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("Unknown origin param: 'test'");
         self::processFilter($config, []);
-        self::fail();
     }
 
     /**
@@ -75,7 +73,6 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("external origin should be an array");
         self::processFilter($config, []);
-        self::fail();
     }
 
     /**
@@ -91,7 +88,6 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("replace should be boolean");
         self::processFilter($config, []);
-        self::fail();
     }
 
     /**
@@ -107,6 +103,5 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("parameters should be an associative array");
         self::processFilter($config, []);
-        self::fail();
     }
 }

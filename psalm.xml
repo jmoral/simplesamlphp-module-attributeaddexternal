@@ -2,10 +2,13 @@
 <psalm
     name="SimpleSAMLphp attributeaddexternal module"
     useDocblockTypes="true"
-    errorLevel="2"
+    errorLevel="1"
     reportMixedIssues="false"
     findUnusedBaselineEntry="true"
     findUnusedCode="true"
+    checkForThrowsDocblock="true"
+    checkForThrowsInGlobalScope="true"
+    findUnusedVariablesAndParams="true"
 >
     <projectFiles>
         <directory name="src" />
