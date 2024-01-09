@@ -9,6 +9,7 @@ use SimpleSAML\Auth;
 use SimpleSAML\Error;
 use SimpleSAML\Assert\AssertionFailedException;
 use SimpleSAML\Utils\HTTP;
+use SimpleSAML\Logger;
 
 use function array_key_exists;
 use function array_merge;
@@ -160,6 +161,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             throw new Error\Exception($msg);
         }
         settype($response, "string");
+        Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $response);
         $responseArray = json_decode($response, true);
         if (is_null($responseArray)) {
             $msg = 'AttributeAddExternal: failed to decode response from ' . var_export($url, true);
