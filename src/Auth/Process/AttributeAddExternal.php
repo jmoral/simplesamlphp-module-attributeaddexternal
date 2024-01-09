@@ -133,6 +133,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
                 $parameters = $this->getParameters($origin['parameters'], $attributes);
                 $url = $http->addURLParameters($url, $parameters);
             }
+            Logger::debug('AttributeAddExternal: obtaining attribute from ' . $url . ' jsonpath ' . $path);
             $response = $this->fetchInformation($url, $path);
             $replace = !empty($origin["replace"]);
             if ($replace === true || !array_key_exists($name, $attributes)) {
