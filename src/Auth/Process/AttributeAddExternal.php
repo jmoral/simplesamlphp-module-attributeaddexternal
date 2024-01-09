@@ -137,7 +137,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             $response = $this->fetchInformation($url, $path);
             $replace = !empty($origin["replace"]);
             if ($replace === true || !array_key_exists($name, $attributes)) {
-                $attributes[$name] = $response;
+                $attributes[$name] = [$response];
             } else {
                 $attributes[$name] = array_merge([$attributes[$name]], [$response]);
             }
@@ -162,7 +162,6 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             throw new Error\Exception($msg);
         }
         settype($response, "string");
-        Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $response);
         $responseArray = json_decode($response, true);
         if (is_null($responseArray)) {
             $msg = 'AttributeAddExternal: failed to decode response from ' . var_export($url, true);
@@ -173,6 +172,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             $msg = 'AttributeAddExternal: invalid path ' . var_export($jsonPath, true);
             throw new Error\Exception($msg);
         }
+        Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $flattened[$jsonPath]);
         return $flattened[$jsonPath];
     }
 

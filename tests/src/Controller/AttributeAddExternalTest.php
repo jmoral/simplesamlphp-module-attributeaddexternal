@@ -65,7 +65,7 @@ class AttributeAddExternalTest extends TestCase
         ];
         $result = self::processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
-        self::assertEquals("zpineiro", $result['Attributes']['test']);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
 
     /**
@@ -132,7 +132,7 @@ class AttributeAddExternalTest extends TestCase
         $result = self::processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
-        self::assertEquals("zpineiro", $result['Attributes']['test']);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
 
     /**
@@ -216,7 +216,7 @@ class AttributeAddExternalTest extends TestCase
         $result = self::processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
-        self::assertEquals("zpineiro", $result['Attributes']['test']);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
 
     /**
