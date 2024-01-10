@@ -267,5 +267,4 @@ class AttributeAddExternalTest extends TestCase
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
-
 }

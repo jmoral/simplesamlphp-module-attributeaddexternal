@@ -119,5 +119,4 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectExceptionMessage("context should be an associative array");
         self::processFilter($config, []);
     }
-
 }
