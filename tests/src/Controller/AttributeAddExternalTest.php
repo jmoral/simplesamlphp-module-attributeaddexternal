@@ -220,7 +220,7 @@ class AttributeAddExternalTest extends TestCase
     }
 
     /**
-     * Test obtain a new external attribute with parameters not un attributes.
+     * Test obtain a new external attribute with parameters not in attributes.
      */
     public function testParameterNotInAttrubites(): void
     {
@@ -243,4 +243,29 @@ class AttributeAddExternalTest extends TestCase
         $this->expectExceptionMessage($msg);
         self::processFilter($config, $initialState);
     }
+
+    /**
+     * Test obtain a new external attribute with context.
+     */
+    public function testExternalAttributeContext(): void
+    {
+        $config = [
+            'test' => [
+                'url' => $this->url,
+                'jsonpath' => 'data.0.username',
+                'context' => ['http' => [
+                    'method' => 'GET',
+                    'header' => 'Authorization: Bearer yourApiKey'
+                ]]
+            ]
+        ];
+        $initialState = [
+            'Attributes' => [],
+        ];
+        $result = self::processFilter($config, $initialState);
+        self::assertNotEquals($initialState, $result);
+        self::assertArrayHasKey("test", $result['Attributes']);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
+    }
+
 }

@@ -88,6 +88,10 @@ class AttributeAddExternal extends Auth\ProcessingFilter
                 $msg = 'parameters should be an associative array';
                 Assert::nullOrIsArray($value, $msg);
                 break;
+            case 'context':
+                $msg = 'context should be an associative array';
+                Assert::nullOrIsArray($value, $msg);
+                break;
             default:
                 $msg = 'Unknown origin param: ' . var_export($name, true);
                 throw new AssertionFailedException($msg);
@@ -128,13 +132,17 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         foreach ($this->attributesToAdd as $name => $origin) {
             $url = $origin["url"];
             $path = $origin["jsonpath"];
+            $context = [];
+            if (array_key_exists("context", $origin)) {
+                $context = $origin["context"];
+            }
             if (array_key_exists("parameters", $origin)) {
                 $http = new HTTP();
                 $parameters = $this->getParameters($origin['parameters'], $attributes);
                 $url = $http->addURLParameters($url, $parameters);
             }
             Logger::debug('AttributeAddExternal: obtaining attribute from ' . $url . ' jsonpath ' . $path);
-            $response = $this->fetchInformation($url, $path);
+            $response = $this->fetchInformation($url, $path, $context);
             $replace = !empty($origin["replace"]);
             if ($replace === true || !array_key_exists($name, $attributes)) {
                 $attributes[$name] = [$response];
@@ -148,15 +156,16 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * Fetch information from an external URL and return data in jsonPath.
      * @param string url url to obtain information from
      * @param string jsonPath reponse path to obtain data from
+     * @param array $context Extra context options. This parameter is optional.
      * @throws Error\Exception If the information from url or jsonPath cannot be retrieved.
      * @return string in jsonPath from response
      */
-    public function fetchInformation(string $url, string $jsonPath): string
+    public function fetchInformation(string $url, string $jsonPath, array $context = []): string
     {
         $http = new HTTP();
         // no getHeaderss
         try {
-            $response = $http->fetch($url);
+            $response = $http->fetch($url, $context);
         } catch (Error\Exception | \InvalidArgumentException $ex) {
             $msg = 'AttributeAddExternal: failed to fetch ' . var_export($url, true);
             throw new Error\Exception($msg);

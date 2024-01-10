@@ -104,4 +104,20 @@ class AttributeAddExternalConfigTest extends TestCase
         $this->expectExceptionMessage("parameters should be an associative array");
         self::processFilter($config, []);
     }
+
+    /**
+     * Test invalid context.
+     */
+    public function testConfigInvalidContext(): void
+    {
+        $config = [
+            'test' => [
+                'context' => 'x'
+            ]
+        ];
+        $this->expectException(AssertionFailedException::class);
+        $this->expectExceptionMessage("context should be an associative array");
+        self::processFilter($config, []);
+    }
+
 }
