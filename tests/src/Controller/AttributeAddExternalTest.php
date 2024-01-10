@@ -92,6 +92,30 @@ class AttributeAddExternalTest extends TestCase
     }
 
     /**
+     * Test no replace but already exists attribute as array.
+     */
+    public function testNoReplaceArray(): void
+    {
+        $config = [
+            'test' => [
+                'url' => $this->url,
+                'jsonpath' => 'data.0.username',
+            ]
+        ];
+        $initialState = [
+            'Attributes' => [
+                'test' => ['a', 'b']
+            ],
+        ];
+        $result = self::processFilter($config, $initialState);
+        self::assertArrayHasKey("test", $result['Attributes']);
+        self::assertCount(3, $result['Attributes']['test']);
+        self::assertEquals("a", $result['Attributes']['test'][0]);
+        self::assertEquals("b", $result['Attributes']['test'][1]);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][2]);
+    }
+
+    /**
      * Test replace false but already exists attribute.
      */
     public function testReplaceFalse(): void

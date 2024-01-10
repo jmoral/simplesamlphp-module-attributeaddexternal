@@ -147,7 +147,12 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             if ($replace === true || !array_key_exists($name, $attributes)) {
                 $attributes[$name] = [$response];
             } else {
-                $attributes[$name] = array_merge([$attributes[$name]], [$response]);
+                $values = $attributes[$name];
+                if (is_array($values)) {
+                    $attributes[$name] = array_merge($values, [$response]);
+                } else {
+                    $attributes[$name] = array_merge([$values], [$response]);
+                }
             }
         }
     }
