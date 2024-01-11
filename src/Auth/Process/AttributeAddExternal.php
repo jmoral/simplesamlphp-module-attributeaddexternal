@@ -124,7 +124,8 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * @param mixed $attributeValue user attribute
      * @return array array with attribute and response
      */
-    private function mergeResponseWithAttributes(string $response, array | string $attributeValue): array {
+    private function mergeResponseWithAttributes(string $response, array | string $attributeValue): array
+    {
         if (is_array($attributeValue)) {
             return array_merge($attributeValue, [$response]);
         } else {
