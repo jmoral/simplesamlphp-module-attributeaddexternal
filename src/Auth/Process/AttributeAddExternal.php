@@ -99,7 +99,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     }
 
     /**
-     * get an associative array with parameteres name and value from attributes.
+     * get an associative array with parameters name and value from attributes.
      * @param array<string, string> $parametersTemplate parameter pointing to atribute
      * @param array $attributes attributes from user
      * @return array associative array with paramaters an actual values
@@ -119,10 +119,22 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     }
 
     /**
+     * Merge response from Http with attributes.
+     * @param string $response from http endpoint
+     * @param mixed $attributeValue user attribute
+     * @return array array with attribute and response
+     */
+    private function mergeResponseWithAttributes(string $response, array | string $attributeValue): array {
+        if (is_array($attributeValue)) {
+            return array_merge($attributeValue, [$response]);
+        } else {
+            return array_merge([$attributeValue], [$response]);
+        }
+    }
+
+    /**
      * Apply filter to add or replace attributes.
-     *
      * Add or replace existing attributes with the configured values.
-     *
      * @param array &$state  The current request
      */
     public function process(array &$state): void
@@ -138,6 +150,9 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             }
             if (array_key_exists("parameters", $origin)) {
                 $http = new HTTP();
+                if (array_key_exists('', $origin['parameters'])) {
+                    $url = $url . $attributes[$origin['parameters']['']];
+                }
                 $parameters = $this->getParameters($origin['parameters'], $attributes);
                 $url = $http->addURLParameters($url, $parameters);
             }
@@ -147,12 +162,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             if ($replace === true || !array_key_exists($name, $attributes)) {
                 $attributes[$name] = [$response];
             } else {
-                $values = $attributes[$name];
-                if (is_array($values)) {
-                    $attributes[$name] = array_merge($values, [$response]);
-                } else {
-                    $attributes[$name] = array_merge([$values], [$response]);
-                }
+                $attributes[$name] = $this->mergeResponseWithAttributes($response, $attributes[$name]);
             }
         }
     }

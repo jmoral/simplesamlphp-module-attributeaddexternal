@@ -244,6 +244,37 @@ class AttributeAddExternalTest extends TestCase
     }
 
     /**
+     * Test obtain a new external attribute with parameters.
+     */
+    public function testExternalAttributeParameterAdd(): void
+    {
+        $config = [
+            'test' => [
+                'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_locale=es_ES',
+                'jsonpath' => 'data.0.username',
+                'parameters' => [
+                    '' => 'field',
+                    '_seed' => 'userSeed',
+                    '_quantity' => 'quantity',
+                    '_locale' => 'locale'
+                ]
+            ]
+        ];
+        $initialState = [
+            'Attributes' => [
+                'userSeed' => '1',
+                'quantity' => '1',
+                'locale' => 'es_ES',
+                'field' => 'users'
+            ],
+        ];
+        $result = self::processFilter($config, $initialState);
+        self::assertNotEquals($initialState, $result);
+        self::assertArrayHasKey("test", $result['Attributes']);
+        self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
+    }
+
+    /**
      * Test obtain a new external attribute with parameters not in attributes.
      */
     public function testParameterNotInAttrubites(): void
