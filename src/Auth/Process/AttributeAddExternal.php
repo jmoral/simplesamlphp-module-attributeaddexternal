@@ -151,7 +151,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             if (array_key_exists("parameters", $origin)) {
                 $http = new HTTP();
                 if (array_key_exists('', $origin['parameters'])) {
-                    $url = $url . $attributes[$origin['parameters']['']];
+                    $url = $url . $attributes[$origin['parameters']['']][0];
                 }
                 $parameters = $this->getParameters($origin['parameters'], $attributes);
                 $url = $http->addURLParameters($url, $parameters);

@@ -265,7 +265,7 @@ class AttributeAddExternalTest extends TestCase
                 'userSeed' => '1',
                 'quantity' => '1',
                 'locale' => 'es_ES',
-                'field' => 'users'
+                'field' => ['users']
             ],
         ];
         $result = self::processFilter($config, $initialState);
