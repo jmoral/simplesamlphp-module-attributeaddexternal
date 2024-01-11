@@ -108,6 +108,10 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     {
         $parameters = [];
         foreach ($parametersTemplate as $name => $template) {
+            //ignore unnamed parameter
+            if ($name === '') {
+                continue;
+            }
             if (array_key_exists($template, $attributes)) {
                 $parameters[$name] = $attributes[$template];
             } else {

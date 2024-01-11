@@ -250,7 +250,7 @@ class AttributeAddExternalTest extends TestCase
     {
         $config = [
             'test' => [
-                'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_locale=es_ES',
+                'url' => 'https://fakerapi.it/api/v1/',
                 'jsonpath' => 'data.0.username',
                 'parameters' => [
                     '' => 'field',
