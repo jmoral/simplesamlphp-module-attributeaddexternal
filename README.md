@@ -6,14 +6,6 @@
 [![Psalm Level](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal/level.svg)](https://shepherd.dev/github/jmoral/simplesamlphp-module-attributeaddexternal)
 
 This module allows you to obtain an attribute from an external URL which returns a json
-## Install
-
-This package is a SimpleSAMLphp module installable through
-[Composer](https://getcomposer.org/). Installation can be as easy as executing:
-
-```bash
-vendor/bin/composer require simplesamlphp/simplesamlphp-module-attributeaddexternal
-```
 
 ## Configuration
 
@@ -24,9 +16,6 @@ in `config.php`, search for the `module.enable` key and set `attributeaddexterna
 ```php
 'module.enable' => [ 'attributeaddexternal' => true, … ],
 ```
-
-See the [SimpleSAMLphp Composer module installer](https://github.com/simplesamlphp/composer-module-installer)
-documentation for more information about creating modules installable through Composer.
 
 ### Adding external attributes
 
