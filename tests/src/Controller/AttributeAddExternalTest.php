@@ -16,7 +16,9 @@ use SimpleSAML\Module\attributeaddexternal\Auth\Process\AttributeAddExternal;
 class AttributeAddExternalTest extends TestCase
 {
     private string $url = 'https://fakerapi.it/api/v1/users?_quantity=1&_seed=1&_locale=es_ES';
+
     private string $wrongUrl = 'https://127.0.0.1:8080/wrong';
+
 
     /**
      * Helper function to run the filter with a given configuration.
@@ -32,6 +34,7 @@ class AttributeAddExternalTest extends TestCase
         return $request;
     }
 
+
     /**
      * Test no new external attribute is added.
      */
@@ -46,6 +49,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertEquals($initialState, $state);
     }
 
+
     /**
      * Test .
      */
@@ -55,18 +59,19 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-                'replace' => true
-            ]
+                'replace' => true,
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'test' => 'a'
+                'test' => 'a',
             ],
         ];
         $result = self::processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
+
 
     /**
      * Test no replace but already exists attribute.
@@ -77,11 +82,11 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'test' => 'a'
+                'test' => 'a',
             ],
         ];
         $result = self::processFilter($config, $initialState);
@@ -90,6 +95,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertEquals("a", $result['Attributes']['test'][0]);
         self::assertEquals("zpineiro", $result['Attributes']['test'][1]);
     }
+
 
     /**
      * Test no replace but already exists attribute as array.
@@ -100,11 +106,11 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'test' => ['a', 'b']
+                'test' => ['a', 'b'],
             ],
         ];
         $result = self::processFilter($config, $initialState);
@@ -115,6 +121,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertEquals("zpineiro", $result['Attributes']['test'][2]);
     }
 
+
     /**
      * Test replace false but already exists attribute.
      */
@@ -124,12 +131,12 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-                'replace' => false
-            ]
+                'replace' => false,
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'test' => 'a'
+                'test' => 'a',
             ],
         ];
         $result = self::processFilter($config, $initialState);
@@ -138,6 +145,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertEquals("a", $result['Attributes']['test'][0]);
         self::assertEquals("zpineiro", $result['Attributes']['test'][1]);
     }
+
 
     /**
      * Test obtain a new external attribute.
@@ -148,7 +156,7 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [],
@@ -159,6 +167,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
 
+
     /**
      * Test obtain a new external attribute not responding url.
      */
@@ -168,7 +177,7 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->wrongUrl,
                 'jsonpath' => 'data.0.username',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [],
@@ -177,6 +186,7 @@ class AttributeAddExternalTest extends TestCase
         $this->expectExceptionMessage("AttributeAddExternal: failed to fetch '$this->wrongUrl'");
         self::processFilter($config, $initialState);
     }
+
 
     /**
      * Test obtain a new external attribute invalid jsonpath.
@@ -187,7 +197,7 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'xx',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [],
@@ -198,6 +208,7 @@ class AttributeAddExternalTest extends TestCase
         self::fail();
     }
 
+
     /**
      * Test obtain a new external attribute invalid json response.
      */
@@ -207,7 +218,7 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => 'https://www.google.es',
                 'jsonpath' => 'xx',
-            ]
+            ],
         ];
         $initialState = [
             'Attributes' => [],
@@ -217,6 +228,7 @@ class AttributeAddExternalTest extends TestCase
         $this->expectExceptionMessage($msg);
         self::processFilter($config, $initialState);
     }
+
 
     /**
      * Test obtain a new external attribute with parameters.
@@ -228,13 +240,13 @@ class AttributeAddExternalTest extends TestCase
                 'url' => 'https://fakerapi.it/api/v1/users?_quantity=1&_locale=es_ES',
                 'jsonpath' => 'data.0.username',
                 'parameters' => [
-                    '_seed' => 'userSeed'
-                ]
-            ]
+                    '_seed' => 'userSeed',
+                ],
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'userSeed' => '1'
+                'userSeed' => '1',
             ],
         ];
         $result = self::processFilter($config, $initialState);
@@ -242,6 +254,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
+
 
     /**
      * Test obtain a new external attribute with parameters.
@@ -256,16 +269,16 @@ class AttributeAddExternalTest extends TestCase
                     '' => 'field',
                     '_seed' => 'userSeed',
                     '_quantity' => 'quantity',
-                    '_locale' => 'locale'
-                ]
-            ]
+                    '_locale' => 'locale',
+                ],
+            ],
         ];
         $initialState = [
             'Attributes' => [
                 'userSeed' => '1',
                 'quantity' => '1',
                 'locale' => 'es_ES',
-                'field' => ['users']
+                'field' => ['users'],
             ],
         ];
         $result = self::processFilter($config, $initialState);
@@ -273,6 +286,7 @@ class AttributeAddExternalTest extends TestCase
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
+
 
     /**
      * Test obtain a new external attribute with parameters not in attributes.
@@ -284,13 +298,13 @@ class AttributeAddExternalTest extends TestCase
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
                 'parameters' => [
-                    '_seed' => 'userSeed'
-                ]
-            ]
+                    '_seed' => 'userSeed',
+                ],
+            ],
         ];
         $initialState = [
             'Attributes' => [
-                'user' => '1'
+                'user' => '1',
             ],
         ];
         $this->expectException(Error\Exception::class);
@@ -298,6 +312,7 @@ class AttributeAddExternalTest extends TestCase
         $this->expectExceptionMessage($msg);
         self::processFilter($config, $initialState);
     }
+
 
     /**
      * Test obtain a new external attribute with context.
@@ -310,9 +325,9 @@ class AttributeAddExternalTest extends TestCase
                 'jsonpath' => 'data.0.username',
                 'context' => ['http' => [
                     'method' => 'GET',
-                    'header' => 'Authorization: Bearer yourApiKey'
-                ]]
-            ]
+                    'header' => 'Authorization: Bearer yourApiKey',
+                ]],
+            ],
         ];
         $initialState = [
             'Attributes' => [],

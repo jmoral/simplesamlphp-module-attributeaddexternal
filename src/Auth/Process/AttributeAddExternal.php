@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace SimpleSAML\Module\attributeaddexternal\Auth\Process;
 
 use SimpleSAML\Assert\Assert;
+use SimpleSAML\Assert\AssertionFailedException;
 use SimpleSAML\Auth;
 use SimpleSAML\Error;
-use SimpleSAML\Assert\AssertionFailedException;
-use SimpleSAML\Utils\HTTP;
 use SimpleSAML\Logger;
+use SimpleSAML\Utils\HTTP;
 
 use function array_key_exists;
 use function array_merge;
@@ -34,6 +34,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      */
     private array $attributesToAdd = [];
 
+
     /**
      * Initialize this filter.
      *
@@ -55,6 +56,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
     }
 
+
     /**
      * Parse external origin for an attribute
      * @param array<string, mixed> $origin external origin for an attribute
@@ -65,6 +67,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             $this->parseOriginParam($name, $value);
         }
     }
+
 
     /**
      * Parse external origin parameter.
@@ -98,6 +101,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
     }
 
+
     /**
      * get an associative array with parameters name and value from attributes.
      * @param array<string, string> $parametersTemplate parameter pointing to atribute
@@ -122,6 +126,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         return $parameters;
     }
 
+
     /**
      * Merge response from Http with attributes.
      * @param string $response from http endpoint
@@ -136,6 +141,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             return array_merge([$attributeValue], [$response]);
         }
     }
+
 
     /**
      * Apply filter to add or replace attributes.
@@ -172,12 +178,13 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
     }
 
+
     /**
      * Fetch information from an external URL and return data in jsonPath.
      * @param string url url to obtain information from
      * @param string jsonPath reponse path to obtain data from
      * @param array $context Extra context options. This parameter is optional.
-     * @throws Error\Exception If the information from url or jsonPath cannot be retrieved.
+     * @throws \SimpleSAML\Error\Exception If the information from url or jsonPath cannot be retrieved.
      * @return string in jsonPath from response
      */
     public function fetchInformation(string $url, string $jsonPath, array $context = []): string
@@ -204,6 +211,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $flattened[$jsonPath]);
         return $flattened[$jsonPath];
     }
+
 
     /**
      * Obtain an unidimensional array with all data, indexed by path.

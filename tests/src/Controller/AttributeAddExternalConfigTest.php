@@ -29,6 +29,7 @@ class AttributeAddExternalConfigTest extends TestCase
         return $request;
     }
 
+
     /**
      * Test invalid url.
      */
@@ -38,12 +39,13 @@ class AttributeAddExternalConfigTest extends TestCase
             'test' => [
                 'url' => 'xxx',
                 'jsonpath' => 'data.0.username',
-            ]
+            ],
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("'xxx' is not a valid RFC2396 compliant URL");
         self::processFilter($config, []);
     }
+
 
     /**
      * Test invalid origin value.
@@ -54,13 +56,14 @@ class AttributeAddExternalConfigTest extends TestCase
             'test' => [
                 'url' => 'https://google.es/',
                 'jsonpath' => 'data.0.username',
-                'test' => 'xx'
-            ]
+                'test' => 'xx',
+            ],
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("Unknown origin param: 'test'");
         self::processFilter($config, []);
     }
+
 
     /**
      * Test invalid origin.
@@ -68,12 +71,13 @@ class AttributeAddExternalConfigTest extends TestCase
     public function testConfigInvalidOrigin(): void
     {
         $config = [
-            'test' => 'x'
+            'test' => 'x',
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("external origin should be an array");
         self::processFilter($config, []);
     }
+
 
     /**
      * Test invalid replace.
@@ -82,13 +86,14 @@ class AttributeAddExternalConfigTest extends TestCase
     {
         $config = [
             'test' => [
-                'replace' => 'x'
-            ]
+                'replace' => 'x',
+            ],
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("replace should be boolean");
         self::processFilter($config, []);
     }
+
 
     /**
      * Test invalid parameters.
@@ -97,13 +102,14 @@ class AttributeAddExternalConfigTest extends TestCase
     {
         $config = [
             'test' => [
-                'parameters' => 'x'
-            ]
+                'parameters' => 'x',
+            ],
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("parameters should be an associative array");
         self::processFilter($config, []);
     }
+
 
     /**
      * Test invalid context.
@@ -112,8 +118,8 @@ class AttributeAddExternalConfigTest extends TestCase
     {
         $config = [
             'test' => [
-                'context' => 'x'
-            ]
+                'context' => 'x',
+            ],
         ];
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage("context should be an associative array");
