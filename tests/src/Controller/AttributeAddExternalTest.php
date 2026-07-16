@@ -371,10 +371,11 @@ class AttributeAddExternalTest extends TestCase
             'test' => [
                 'url' => $this->url,
                 'jsonpath' => 'data.0.username',
-                'context' => ['http' => [
-                    'method' => 'GET',
-                    'header' => 'Authorization: Bearer yourApiKey',
-                ]],
+                'context' => [
+                    'headers' => [
+                        'Authorization' => 'Bearer yourApiKey',
+                    ],
+                ],
             ],
         ];
         $initialState = [
