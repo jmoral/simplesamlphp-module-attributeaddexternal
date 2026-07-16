@@ -148,6 +148,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      * Add or replace existing attributes with the configured values.
      * @param array &$state  The current request
      */
+    #[\Override]
     public function process(array &$state): void
     {
         Assert::keyExists($state, 'Attributes');
