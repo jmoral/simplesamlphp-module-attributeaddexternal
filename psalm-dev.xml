@@ -17,11 +17,18 @@
     </projectFiles>
 
     <issueHandlers>
-        <!-- Ignore UnresolvableInclude on CLI-scripts -->
-        <UnresolvableInclude>
+        <!-- Test classes are entry points invoked by PHPUnit via reflection, not referenced in code -->
+        <UnusedClass>
             <errorLevel type="suppress">
-                <file name="tests/bootstrap.php" />
+                <directory name="tests" />
             </errorLevel>
-        </UnresolvableInclude>
+        </UnusedClass>
+
+        <!-- Test classes are conventionally left extensible, not final -->
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="tests" />
+            </errorLevel>
+        </ClassMustBeFinal>
     </issueHandlers>
 </psalm>
