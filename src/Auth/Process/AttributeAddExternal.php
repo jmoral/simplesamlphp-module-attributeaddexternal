@@ -195,8 +195,9 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         try {
             $response = $http->fetch($url, $context);
         } catch (Error\Exception | \InvalidArgumentException $ex) {
-            $msg = 'AttributeAddExternal: failed to fetch ' . var_export($url, true);
-            throw new Error\Exception($msg);
+            $msg = 'AttributeAddExternal: failed to fetch ' . var_export($url, true)
+                . ': ' . $ex->getMessage();
+            throw new Error\Exception($msg, 0, $ex);
         }
         settype($response, "string");
         $responseArray = json_decode($response, true);
