@@ -189,7 +189,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
      */
     public function fetchInformation(string $url, string $jsonPath, array $context = []): string
     {
-        $http = new HTTP();
+        $http = $this->getHttp();
         // no getHeaderss
         try {
             $response = $http->fetch($url, $context);
@@ -210,6 +210,16 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
         Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $flattened[$jsonPath]);
         return $flattened[$jsonPath];
+    }
+
+
+    /**
+     * Build the HTTP client used to fetch external data.
+     * Overridable so tests can substitute a test double instead of hitting the network.
+     */
+    protected function getHttp(): HTTP
+    {
+        return new HTTP();
     }
 
 

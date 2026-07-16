@@ -7,9 +7,13 @@ namespace SimpleSAML\Test\attributeaddexternal\Auth\Process;
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Error;
 use SimpleSAML\Module\attributeaddexternal\Auth\Process\AttributeAddExternal;
+use SimpleSAML\Utils\HTTP;
 
 /**
  * Set of tests for "attributeaddexternal" module.
+ *
+ * These tests never hit the network: AttributeAddExternal::getHttp() is overridden
+ * with a test double that fakes the responses a real external API would give.
  *
  * @package SimpleSAML\Test
  */
@@ -21,15 +25,59 @@ class AttributeAddExternalTest extends TestCase
 
 
     /**
+     * Build an HTTP double that fakes external responses instead of hitting the network.
+     *
+     * - the configured wrong URL simulates a connection failure.
+     * - google.es simulates a non-JSON response.
+     * - anything else (fakerapi.it URLs) returns a canned JSON payload with a
+     *   'data.0.username' of 'zpineiro', matching what the real API used to return.
+     */
+    private function createHttpDouble(): HTTP
+    {
+        $http = $this->createStub(HTTP::class);
+        $http->method('fetch')->willReturnCallback(function (string $url) {
+            if (str_starts_with($url, $this->wrongUrl)) {
+                throw new Error\Exception("Could not connect to '$url'");
+            }
+            if (str_contains($url, 'google.es')) {
+                return '<html><body>not json</body></html>';
+            }
+            return json_encode([
+                'status' => 'OK',
+                'code' => 200,
+                'total' => 1,
+                'data' => [
+                    ['id' => 1, 'username' => 'zpineiro'],
+                ],
+            ]);
+        });
+        return $http;
+    }
+
+
+    /**
      * Helper function to run the filter with a given configuration.
      *
      * @param array $config  The filter configuration.
      * @param array $request  The request state.
      * @return array  The state array after processing.
      */
-    private static function processFilter(array $config, array $request): array
+    private function processFilter(array $config, array $request): array
     {
-        $filter = new AttributeAddExternal($config, null);
+        $http = $this->createHttpDouble();
+        $filter = new class ($config, null, $http) extends AttributeAddExternal {
+            public function __construct(array &$config, mixed $reserved, private readonly HTTP $httpDouble)
+            {
+                parent::__construct($config, $reserved);
+            }
+
+
+            #[\Override]
+            protected function getHttp(): HTTP
+            {
+                return $this->httpDouble;
+            }
+        };
         $filter->process($request);
         return $request;
     }
@@ -45,7 +93,7 @@ class AttributeAddExternalTest extends TestCase
             'Attributes' => [],
         ];
         $state = $initialState;
-        self::processFilter($config, $state);
+        $this->processFilter($config, $state);
         self::assertEquals($initialState, $state);
     }
 
@@ -67,7 +115,7 @@ class AttributeAddExternalTest extends TestCase
                 'test' => 'a',
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
     }
@@ -89,7 +137,7 @@ class AttributeAddExternalTest extends TestCase
                 'test' => 'a',
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertCount(2, $result['Attributes']['test']);
         self::assertEquals("a", $result['Attributes']['test'][0]);
@@ -113,7 +161,7 @@ class AttributeAddExternalTest extends TestCase
                 'test' => ['a', 'b'],
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertCount(3, $result['Attributes']['test']);
         self::assertEquals("a", $result['Attributes']['test'][0]);
@@ -139,7 +187,7 @@ class AttributeAddExternalTest extends TestCase
                 'test' => 'a',
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertCount(2, $result['Attributes']['test']);
         self::assertEquals("a", $result['Attributes']['test'][0]);
@@ -161,7 +209,7 @@ class AttributeAddExternalTest extends TestCase
         $initialState = [
             'Attributes' => [],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
@@ -184,7 +232,7 @@ class AttributeAddExternalTest extends TestCase
         ];
         $this->expectException(Error\Exception::class);
         $this->expectExceptionMessage("AttributeAddExternal: failed to fetch '$this->wrongUrl'");
-        self::processFilter($config, $initialState);
+        $this->processFilter($config, $initialState);
     }
 
 
@@ -204,7 +252,7 @@ class AttributeAddExternalTest extends TestCase
         ];
         $this->expectException(Error\Exception::class);
         $this->expectExceptionMessage("AttributeAddExternal: invalid path 'xx'");
-        self::processFilter($config, $initialState);
+        $this->processFilter($config, $initialState);
         self::fail();
     }
 
@@ -226,7 +274,7 @@ class AttributeAddExternalTest extends TestCase
         $this->expectException(Error\Exception::class);
         $msg = "AttributeAddExternal: failed to decode response from 'https://www.google.es'";
         $this->expectExceptionMessage($msg);
-        self::processFilter($config, $initialState);
+        $this->processFilter($config, $initialState);
     }
 
 
@@ -249,7 +297,7 @@ class AttributeAddExternalTest extends TestCase
                 'userSeed' => '1',
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
@@ -281,7 +329,7 @@ class AttributeAddExternalTest extends TestCase
                 'field' => ['users'],
             ],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
@@ -310,7 +358,7 @@ class AttributeAddExternalTest extends TestCase
         $this->expectException(Error\Exception::class);
         $msg = "AttributeAddExternal: parameter not found in attributes 'userSeed'";
         $this->expectExceptionMessage($msg);
-        self::processFilter($config, $initialState);
+        $this->processFilter($config, $initialState);
     }
 
 
@@ -332,7 +380,7 @@ class AttributeAddExternalTest extends TestCase
         $initialState = [
             'Attributes' => [],
         ];
-        $result = self::processFilter($config, $initialState);
+        $result = $this->processFilter($config, $initialState);
         self::assertNotEquals($initialState, $result);
         self::assertArrayHasKey("test", $result['Attributes']);
         self::assertEquals("zpineiro", $result['Attributes']['test'][0]);
