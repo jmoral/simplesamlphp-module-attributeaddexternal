@@ -231,8 +231,13 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             if (is_int($name)) {
                 [$name, $value] = array_pad(explode(':', (string) $value, 2), 2, '');
             }
-            $length = strlen(trim((string) $value));
-            Logger::debug('AttributeAddExternal: header ' . trim((string) $name) . ' length ' . $length);
+            $rawLength = strlen((string) $value);
+            $trimmedLength = strlen(trim((string) $value));
+            Logger::debug(
+                'AttributeAddExternal: header ' . trim((string) $name)
+                . ' length ' . $rawLength
+                . ' (trimmed ' . $trimmedLength . ')'
+            );
         }
     }
 
