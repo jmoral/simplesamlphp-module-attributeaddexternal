@@ -236,7 +236,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             Logger::debug(
                 'AttributeAddExternal: header ' . trim((string) $name)
                 . ' length ' . $rawLength
-                . ' (trimmed ' . $trimmedLength . ')'
+                . ' (trimmed ' . $trimmedLength . ')',
             );
         }
     }
