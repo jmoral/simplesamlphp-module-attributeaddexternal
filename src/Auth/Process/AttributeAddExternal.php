@@ -233,10 +233,12 @@ class AttributeAddExternal extends Auth\ProcessingFilter
             }
             $rawLength = strlen((string) $value);
             $trimmedLength = strlen(trim((string) $value));
+            $fingerprint = substr(hash('sha256', (string) $value), 0, 12);
             Logger::debug(
                 'AttributeAddExternal: header ' . trim((string) $name)
                 . ' length ' . $rawLength
-                . ' (trimmed ' . $trimmedLength . ')',
+                . ' (trimmed ' . $trimmedLength . ')'
+                . ' fingerprint ' . $fingerprint,
             );
         }
     }
