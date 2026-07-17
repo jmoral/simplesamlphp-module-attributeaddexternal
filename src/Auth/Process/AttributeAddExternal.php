@@ -192,6 +192,7 @@ class AttributeAddExternal extends Auth\ProcessingFilter
     {
         $http = $this->getHttp();
         // no getHeaderss
+        $this->logHeaderLengths($context);
         try {
             $response = $http->fetch($url, $context);
         } catch (Error\Exception | \InvalidArgumentException $ex) {
@@ -212,6 +213,27 @@ class AttributeAddExternal extends Auth\ProcessingFilter
         }
         Logger::debug('AttributeAddExternal: response from ' . $url . ' is ' . $flattened[$jsonPath]);
         return $flattened[$jsonPath];
+    }
+
+
+    /**
+     * Log the length of each outgoing header value, without exposing the value itself.
+     * Useful to diagnose empty/misconfigured secrets (e.g. an API key from getenv())
+     * without leaking them to the logs.
+     * @param array $context HTTP client context, as passed to fetchInformation().
+     */
+    private function logHeaderLengths(array $context): void
+    {
+        if (!array_key_exists('headers', $context) || !is_array($context['headers'])) {
+            return;
+        }
+        foreach ($context['headers'] as $name => $value) {
+            if (is_int($name)) {
+                [$name, $value] = array_pad(explode(':', (string) $value, 2), 2, '');
+            }
+            $length = strlen(trim((string) $value));
+            Logger::debug('AttributeAddExternal: header ' . trim((string) $name) . ' length ' . $length);
+        }
     }
 
 
